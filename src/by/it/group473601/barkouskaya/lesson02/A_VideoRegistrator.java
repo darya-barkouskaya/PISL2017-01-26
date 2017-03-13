@@ -1,6 +1,7 @@
 package by.it.group473601.barkouskaya.lesson02;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 /*
 даны события events
@@ -14,9 +15,9 @@ import java.util.List;
 public class A_VideoRegistrator {
 
     public static void main(String[] args) {
-        A_VideoRegistrator instance=new A_VideoRegistrator();
-        double[] events=new double[]{1, 1.1, 1.6, 2.2, 2.4, 2.7, 3.9, 8.1, 9.1, 5.5, 3.7};
-        List<Double> starts=instance.calcStartTimes(events,1); //рассчитаем моменты старта, с длинной сеанса 1
+        A_VideoRegistrator instance = new A_VideoRegistrator();
+        double[] events = new double[]{1, 1.1, 1.6, 2.2, 2.4, 2.7, 3.9, 8.1, 9.1, 5.5, 3.7};
+        List<Double> starts = instance.calcStartTimes(events, 1); //рассчитаем моменты старта, с длинной сеанса 1
         System.out.println(starts);                            //покажем моменты старта
     }
     //модификаторы доступа опущены для возможности тестирования
@@ -25,20 +26,24 @@ public class A_VideoRegistrator {
         //timeWorkDuration время работы видеокамеры после старта
         List<Double> result;
         result = new ArrayList<>();
-        int i=0;                              //i - это индекс события events[i]
+        int i;                              //i - это индекс события events[i]
         //комментарии от проверочного решения сохранены для подсказки, но вы можете их удалить.
                                               //подготовка к жадному поглощению массива событий
-                                              //hint: сортировка Arrays.sort обеспечит скорость алгоритма
-                                              //C*(n log n) + C1*n = O(n log n)
+        Arrays.sort(events);                  //hint: сортировка Arrays.sort обеспечит скорость алгоритма
 
-                                              //пока есть незарегистрированные события
-                                                //получим одно событие по левому краю
-                                                //и запомним время старта видеокамеры
-                                                //вычислим момент окончания работы видеокамеры
-                                                //и теперь пропустим все покрываемые события
-                                                //за время до конца работы, увеличивая индекс
+        double end;                        //C*(n log n) + C1*n = O(n log n)
 
+        for (i = 0; i < events.length; i++) {       //пока есть незарегистрированные события
+            result.add(events[i]);                  //получим одно событие по левому краю
+            end = events[i] + workDuration;      //и запомним время старта видеокамеры
 
+            for (int j = i + 1; j < events.length; j++) {     //вычислим момент окончания работы видеокамеры
+                if (events[j] <= end)                      //и теперь пропустим все покрываемые события
+                    i++;                                      //за время до конца работы, увеличивая индекс
+                else
+                    break;
+            }
+        }
 
         return result;                        //вернем итог
     }
